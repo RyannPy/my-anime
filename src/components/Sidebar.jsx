@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { signOut } from "../services/authServices";
+import { signOut, getCurrentUser } from "../services/authServices";
 
 const menuItems = [
   {
@@ -117,7 +117,7 @@ const menuItems = [
         />
       </svg>
     ),
-  }
+  },
 ];
 
 function Sidebar() {
@@ -126,8 +126,35 @@ function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
 
+  const [userEmail, setUserEmail] = useState("loading...");
+  const [displayName, setDisplayName] = useState("Loading");
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getCurrentUser();
+        if (user && user.email) {
+          setUserEmail(user.email);
+          let namePart = user.email.split("@")[0];
+          namePart = namePart.replace(/[0-9]/g, ""); // Remove numbers
+          const capitalized =
+            namePart.charAt(0).toUpperCase() + namePart.slice(1);
+          setDisplayName(capitalized);
+        } else {
+          setUserEmail("visitor@anitrack.app");
+          setDisplayName("Guest User");
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUserEmail("visitor@anitrack.app");
+        setDisplayName("Guest User");
+      }
+    };
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const path = location.pathname;
@@ -342,7 +369,11 @@ function Sidebar() {
           `}
         >
           <div className="shrink-0 w-9 h-9 rounded-xl bg-linear-to-br from-blue-100 to-blue-200 flex items-center justify-center border-2 border-blue-300 overflow-hidden">
-            <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24">
+            <svg
+              className="w-5 h-5 text-blue-500"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
@@ -355,10 +386,10 @@ function Sidebar() {
           {!collapsed && (
             <div className="flex-1 min-w-0">
               <p className="font-mono text-sm font-semibold text-slate-700 truncate">
-                Guest User
+                {displayName}
               </p>
               <p className="font-mono text-[11px] text-blue-400 truncate">
-                visitor@anitrack.app
+                {userEmail}
               </p>
             </div>
           )}
@@ -370,14 +401,12 @@ function Sidebar() {
             type="button"
             onClick={handleLogout}
             aria-label="Logout"
-            className={
-              `w-full flex items-center gap-2 px-3 py-2 rounded-xl
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl
               font-mono text-sm font-medium text-slate-500
               hover:bg-blue-50 hover:text-blue-600
               transition-all duration-200
               border border-blue-100
-              ${collapsed ? "justify-center" : ""}`
-            }
+              ${collapsed ? "justify-center" : ""}`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24">
               <path
