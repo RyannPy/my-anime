@@ -1,5 +1,6 @@
 
-
+// Helper: gunakan watched_at jika ada, fallback ke created_at (untuk data legacy)
+const getDateRef = (anime) => anime.watched_at || anime.created_at;
 
 // TOTAL ANIME
 export const getTotalAnime = (animes) => {
@@ -59,10 +60,10 @@ export const getThisMonthAnimeCount = (animes) => {
 
 
     return animes.filter((anime) => {
-        const created = new Date(anime.created_at);
+        const date = new Date(getDateRef(anime));
         return (
-            created.getMonth() === currentMonth &&
-            created.getFullYear() === currentYear
+            date.getMonth() === currentMonth &&
+            date.getFullYear() === currentYear
         );
     }).length
 };
@@ -72,7 +73,7 @@ export const getMonthlyActivity = (animes) => {
     const result = {};
 
     animes.forEach((anime) => {
-        const date = new Date(anime.created_at);
+        const date = new Date(getDateRef(anime));
 
         const month = date.toLocaleString("id-ID", {
             month: "short",

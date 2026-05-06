@@ -22,6 +22,7 @@ const AddAnime = ({ onClose }) => {
   const [title, setTitle] = useState("");
   const [rating, setRating] = useState("");
   const [review, setReview] = useState("");
+  const [watchedAt, setWatchedAt] = useState("");
   const [list, setList] = useState([]);
   const [editId, setEditId] = useState(null);
   const [existingImageUrl, setExistingImageUrl] = useState(null);
@@ -40,8 +41,6 @@ const AddAnime = ({ onClose }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // If parent passes prefill via window (Dashboard will set prefillAnime state and pass here via prop if wired),
-  // this file also supports an external prefill through a global custom event.
   useEffect(() => {
     const handler = (e) => {
       const payload = e.detail;
@@ -50,6 +49,7 @@ const AddAnime = ({ onClose }) => {
       setTitle(payload.title || "");
       setRating(payload.rating?.toString() || "");
       setReview(payload.review || "");
+      setWatchedAt(payload.watched_at || "");
       setSelectedGenres(
         (payload.anime_genres || [])
           .map((g) => Number(g.genre_id || g.genres?.id))
@@ -97,6 +97,7 @@ const AddAnime = ({ onClose }) => {
     setTitle("");
     setRating("");
     setReview("");
+    setWatchedAt("");
     setSelectedGenres([]);
     setImage(null);
     setEditId(null);
@@ -154,6 +155,7 @@ const AddAnime = ({ onClose }) => {
         rating: ratingValue,
         review: review.trim(),
         image_url: imageUrl,
+        watched_at: watchedAt || null,
       });
 
       if (error) {
@@ -181,6 +183,7 @@ const AddAnime = ({ onClose }) => {
       review: review.trim(),
       image_url: imageUrl,
       user_id: user.id,
+      watched_at: watchedAt || null,
     });
 
     if (createError) {
@@ -208,6 +211,7 @@ const AddAnime = ({ onClose }) => {
     setTitle(item.title || "");
     setRating(item.rating?.toString() || "");
     setReview(item.review || "");
+    setWatchedAt(item.watched_at || "");
     setSelectedGenres(
       (item.anime_genres || [])
         .map((g) => Number(g.genre_id || g.genres?.id))
@@ -267,6 +271,19 @@ const AddAnime = ({ onClose }) => {
               />
             </label>
           </div>
+
+          <label className="block rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
+            <span className="text-sm font-medium text-slate-700">
+              Tanggal Ditonton
+              <span className="ml-2 text-xs font-normal text-slate-400">(opsional)</span>
+            </span>
+            <input
+              type="date"
+              className="mt-3 w-full bg-transparent text-slate-900 outline-none"
+              value={watchedAt}
+              onChange={(e) => setWatchedAt(e.target.value)}
+            />
+          </label>
 
           <label className="block rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
             <span className="text-sm font-medium text-slate-700">
