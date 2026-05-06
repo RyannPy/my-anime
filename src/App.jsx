@@ -1,3 +1,4 @@
+import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import AnimeList from "./pages/AnimeList";
 import Auth from "./pages/Auth";
@@ -30,8 +31,11 @@ function App() {
       <ToastContext.Provider value={{ addToast }}>
         {/* semua routes */}
         <Routes>
+          {/* LANDING */}
+          <Route path="/" element={<Landing />} />
+
           {/* AUTH */}
-          <Route path="/" element={<Auth />} />
+          <Route path="/auth" element={<Auth />} />
 
           {/* DASHBOARD */}
           <Route

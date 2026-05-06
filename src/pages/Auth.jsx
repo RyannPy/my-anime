@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { signIn, signUp } from "../services/authServices";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "../contexts/ToastContexts";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Auth = () => {
+  const location = useLocation();
+  const initialMode = location.state?.mode !== "register";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(initialMode);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -91,6 +94,15 @@ const Auth = () => {
           </div>
           
           <div className="relative z-10 hidden md:block">
+            <button
+              onClick={() => navigate("/")}
+              className="mb-3 flex items-center gap-2 text-sm text-blue-200/70 transition hover:text-white"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Kembali ke Beranda
+            </button>
             <p className="text-sm text-blue-200/70">© 2026 RyannPy. All rights reserved.</p>
           </div>
         </div>
