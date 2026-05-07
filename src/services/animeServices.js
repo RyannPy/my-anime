@@ -24,6 +24,24 @@ export const getAnimesWithGenres = async (userId, limit) => {
     return await query;
 };
 
+// GET leaderboard animes
+export const getLeaderboardAnimes = async (userId, sortBy = "rating_desc") => {
+    let query = supabase
+        .from("animes")
+        .select(`*, anime_genres ( genres ( id, name ) )`)
+        .eq("user_id", userId);
+
+    if (sortBy === "rating_desc") {
+        query = query.order("rating", { ascending: false }).order("id", { ascending: false });
+    } else if (sortBy === "rating_asc") {
+        query = query.order("rating", { ascending: true }).order("id", { ascending: false });
+    } else if (sortBy === "newest") {
+        query = query.order("created_at", { ascending: false });
+    }
+
+    return await query;
+};
+
 // ADD
 export const createAnime = async (anime) => {
     return await supabase.from("animes").insert([anime]).select();

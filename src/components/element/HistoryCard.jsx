@@ -1,6 +1,6 @@
 import GenreBadge from "./GenreBadge";
 
-const HistoryCard = ({ anime, onClick }) => {
+const HistoryCard = ({ anime, onClick, rank }) => {
   const {
     created_at = "",
     title = "",
@@ -17,6 +17,15 @@ const HistoryCard = ({ anime, onClick }) => {
 
   return (
     <article onClick={() => onClick?.(anime)} className="flex w-full overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer border border-slate-100 h-37.5 mt-1">
+      {/* Rank Kiri (Optional) */}
+      {rank && (
+        <div className="flex w-16 shrink-0 items-center justify-center bg-slate-50 border-r border-slate-100">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-700 shadow-sm border border-slate-100">
+            #{rank}
+          </span>
+        </div>
+      )}
+
       {/* Thumbnail Kiri */}
       <div className="w-28 sm:w-36 shrink-0 bg-slate-100">
         <img
